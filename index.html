@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вайб-кодинг без кода — создавай и зарабатывай с нейросетями</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #7C3AED;
+      --primary-light: #A78BFA;
+      --primary-dark: #5B21B6;
+      --accent: #F59E0B;
+      --accent-light: #FCD34D;
+      --bg-dark: #0F0A1F;
+      --bg-card: #1A1333;
+      --bg-card-hover: #231A45;
+      --text: #F1F0F5;
+      --text-muted: #A09CB0;
+      --gradient-hero: linear-gradient(135deg, #0F0A1F 0%, #1E1145 40%, #2D1B69 100%);
+      --gradient-accent: linear-gradient(135deg, #7C3AED, #EC4899);
+      --gradient-gold: linear-gradient(135deg, #F59E0B, #EF4444);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ========== UTILITY ========== */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      border-radius: 60px;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(124, 58, 237, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-light);
+      border: 2px solid var(--primary-light);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-gold {
+      background: var(--gradient-gold);
+      color: #fff;
+      font-size: 19px;
+      padding: 20px 48px;
+      box-shadow: 0 4px 30px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 50px rgba(245, 158, 11, 0.6);
+    }
+
+    /* ========== ANIMATIONS ========== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+
+    /* ========== FLOATING SHAPES ========== */
+    .shapes {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+    }
+
+    .shape-1 {
+      width: 500px; height: 500px;
+      background: #7C3AED;
+      top: -150px; right: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .shape-2 {
+      width: 400px; height: 400px;
+      background: #EC4899;
+      bottom: -100px; left: -100px;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    .shape-3 {
+      width: 300px; height: 300px;
+      background: #F59E0B;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: float 12s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.6); }
+    }
+
+    /* ========== NAVBAR ========== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(15, 10, 31, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+      padding: 10px 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-cta {
+      padding: 10px 24px;
+      font-size: 14px;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: var(--gradient-hero);
+      position: relative;
+      padding-top: 80px;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-light);
+      margin-bottom: 32px;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #22C55E;
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+
+    .hero-title .highlight {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 44px;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      margin-top: 72px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 40px;
+      font-weight: 900;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ========== WHAT IS ========== */
+    .what-is {
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #130E28 100%);
+    }
+
+    .what-is-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 48px;
+    }
+
+    .what-is-visual {
+      position: relative;
+    }
+
+    .code-window {
+      background: #1A1333;
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: rgba(124, 58, 237, 0.08);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-dot.red { background: #EF4444; }
+    .code-dot.yellow { background: #F59E0B; }
+    .code-dot.green { background: #22C55E; }
+
+    .code-body {
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .code-comment { color: #6B7280; }
+    .code-keyword { color: #A78BFA; }
+    .code-string { color: #34D399; }
+    .code-func { color: #F59E0B; }
+
+    .code-arrow {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0;
+      font-size: 36px;
+      color: var(--primary-light);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    .result-window {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(236, 72, 153, 0.08));
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+    }
+
+    .result-window .emoji { font-size: 48px; margin-bottom: 12px; }
+    .result-window p { color: var(--text-muted); font-size: 15px; }
+    .result-window strong { color: var(--text); font-size: 18px; display: block; margin-bottom: 8px; }
+
+    /* ========== MINI SITE PREVIEW (wireframe) ========== */
+    .site-preview {
+      background: #111;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* browser bar */
+    .sp-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #1e1e2a;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sp-bar-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+    }
+    .sp-bar-dot.r { background: #ff5f57; }
+    .sp-bar-dot.y { background: #ffbd2e; }
+    .sp-bar-dot.g { background: #28c840; }
+    .sp-bar-url {
+      flex: 1;
+      margin-left: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 8px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* page content */
+    .sp-page {
+      padding: 16px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: linear-gradient(180deg, #13111f 0%, #18152a 100%);
+    }
+
+    /* hero block */
+    .sp-block-hero {
+      text-align: center;
+      padding: 18px 10px 14px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(236,72,153,0.08));
+      border: 1px solid rgba(124,58,237,0.15);
+    }
+    .sp-block-hero .sp-line-lg {
+      width: 65%;
+      height: 8px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 4px;
+      margin: 0 auto 6px;
+    }
+    .sp-block-hero .sp-line-accent {
+      width: 45%;
+      height: 8px;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      border-radius: 4px;
+      margin: 0 auto 10px;
+    }
+    .sp-block-hero .sp-line-sm {
+      width: 70%;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      margin: 0 auto 4px;
+    }
+    .sp-block-hero .sp-btn-fake {
+      display: inline-block;
+      width: 60px;
+      height: 16px;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+
+    /* features row */
+    .sp-block-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .sp-feature-card {
+      background: rgba(124,58,237,0.08);
+      border: 1px solid rgba(124,58,237,0.12);
+      border-radius: 6px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .sp-feature-icon {
+      width: 18px; height: 18px;
+      border-radius: 5px;
+      background: rgba(124,58,237,0.2);
+    }
+    .sp-feature-line {
+      width: 80%;
+      height: 3px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+    .sp-feature-line2 {
+      width: 55%;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+    }
+
+    /* reviews row */
+    .sp-block-reviews {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .sp-review-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .sp-review-avatar {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: rgba(167,139,250,0.25);
+    }
+    .sp-review-stars-w {
+      display: flex; gap: 1px;
+    }
+    .sp-review-star {
+      width: 5px; height: 5px;
+      background: #F59E0B;
+      border-radius: 1px;
+    }
+    .sp-review-line {
+      width: 75%;
+      height: 2px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 1px;
+    }
+
+    /* CTA bottom */
+    .sp-block-cta {
+      text-align: center;
+      padding: 12px 10px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.08));
+      border: 1px solid rgba(245,158,11,0.15);
+    }
+    .sp-block-cta .sp-line-md {
+      width: 50%;
+      height: 5px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 3px;
+      margin: 0 auto 8px;
+    }
+    .sp-block-cta .sp-btn-fake-gold {
+      display: inline-block;
+      width: 70px;
+      height: 14px;
+      background: linear-gradient(135deg, #F59E0B, #EF4444);
+      border-radius: 8px;
+    }
+
+    /* ========== WHAT CAN CREATE ========== */
+    .create {
+      background: var(--bg-dark);
+    }
+
+    .create-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .create-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .create-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .create-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .create-card:hover::before { opacity: 1; }
+
+    .create-icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .create-icon.purple { background: rgba(124, 58, 237, 0.15); }
+    .create-icon.pink { background: rgba(236, 72, 153, 0.15); }
+    .create-icon.amber { background: rgba(245, 158, 11, 0.15); }
+    .create-icon.green { background: rgba(34, 197, 94, 0.15); }
+
+    .create-card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .create-card ul {
+      list-style: none;
+    }
+
+    .create-card li {
+      color: var(--text-muted);
+      font-size: 15px;
+      padding: 4px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .create-card li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary-light);
+    }
+
+    /* ========== WHY NOW ========== */
+    .why-now {
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #130E28 100%);
+    }
+
+    .why-now-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 48px;
+    }
+
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--primary-light), transparent);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      padding-bottom: 36px;
+      position: relative;
+    }
+
+    .timeline-dot {
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      z-index: 1;
+    }
+
+    .timeline-text h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .timeline-text p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .big-quote {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      line-height: 1.4;
+      position: relative;
+      padding-left: 24px;
+      border-left: 3px solid var(--primary);
+    }
+
+    .big-quote .accent {
+      color: var(--accent);
+    }
+
+    /* ========== EXAMPLES / MONEY ========== */
+    .examples {
+      background: var(--bg-dark);
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .example-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      border-radius: var(--radius);
+      padding: 36px;
+      transition: all 0.4s ease;
+    }
+
+    .example-card:hover {
+      border-color: rgba(245, 158, 11, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .example-num {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 12px;
+      background: var(--gradient-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .example-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .example-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .example-meta-item {
+      display: flex;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .example-meta-item .label {
+      color: var(--text-muted);
+      min-width: 90px;
+    }
+
+    .example-money {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+
+    .example-money-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .example-money ul {
+      list-style: none;
+    }
+
+    .example-money li {
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 3px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .example-money li::before {
+      content: '$$';
+      position: absolute;
+      left: 0;
+      font-size: 12px;
+    }
+
+    /* ========== WHAT YOU NEED ========== */
+    .needs {
+      background: linear-gradient(180deg, #130E28 0%, var(--bg-dark) 100%);
+    }
+
+    .needs-content {
+      margin-top: 48px;
+    }
+
+    .needs-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .needs-no, .needs-yes {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 36px;
+      border: 1px solid rgba(124, 58, 237, 0.12);
+    }
+
+    .needs-no h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #EF4444;
+    }
+
+    .needs-yes h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #22C55E;
+    }
+
+    .needs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .needs-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 16px;
+    }
+
+    .needs-list .icon {
+      font-size: 20px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .needs-list .text { color: var(--text-muted); }
+
+    /* ========== TRY IT ========== */
+    .try-it {
+      background: var(--bg-dark);
+    }
+
+    .prompt-box {
+      margin-top: 48px;
+      background: var(--bg-card);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .prompt-header {
+      background: rgba(124, 58, 237, 0.1);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .prompt-header span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .copy-btn {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      color: var(--primary-light);
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .prompt-body {
+      padding: 28px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+
+    .prompt-body strong { color: var(--text); }
+    .prompt-body .prompt-highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .try-it-note {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .try-it-note .accent { color: var(--accent); }
+
+    /* ========== WHY NOT ENOUGH ========== */
+    .not-enough {
+      background: linear-gradient(180deg, var(--bg-dark), #130E28);
+    }
+
+    .not-enough-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .ne-card {
+      text-align: center;
+      padding: 40px 28px;
+      background: var(--bg-card);
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      border-radius: var(--radius);
+      transition: all 0.3s ease;
+    }
+
+    .ne-card:hover {
+      border-color: rgba(124, 58, 237, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .ne-icon {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .ne-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .ne-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* ========== FINAL CTA ========== */
+    .final-cta {
+      background: var(--gradient-hero);
+      text-align: center;
+      position: relative;
+      padding: 120px 0;
+    }
+
+    .final-cta .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .final-cta .section-title {
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-features {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 40px 0 48px;
+    }
+
+    .cta-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .cta-feature .check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #22C55E;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .cta-bottom-note {
+      margin-top: 24px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      padding: 40px 0;
+      text-align: center;
+      border-top: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    .footer p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* ========== MARQUEE ========== */
+    .marquee-section {
+      padding: 20px 0;
+      overflow: hidden;
+      background: rgba(124, 58, 237, 0.05);
+      border-top: 1px solid rgba(124, 58, 237, 0.1);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 48px;
+      animation: marquee 30s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-item {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .marquee-item .sep {
+      color: var(--primary);
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ========== TABLE OF CONTENTS ========== */
+    .toc-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .toc-item:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(124, 58, 237, 0.35);
+      transform: translateX(6px);
+    }
+
+    .toc-num {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary-light);
+      min-width: 32px;
+      opacity: 0.6;
+    }
+
+    .toc-text {
+      flex: 1;
+    }
+
+    .toc-text h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .toc-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .toc-arrow {
+      font-size: 18px;
+      color: var(--primary-light);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .toc-item:hover .toc-arrow {
+      opacity: 1;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .section { padding: 48px 0; }
+
+      .section-title {
+        margin-bottom: 14px;
+      }
+
+      .section-subtitle {
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
+      .section-label {
+        margin-bottom: 10px;
+      }
+
+      .what-is-grid,
+      .why-now-content,
+      .needs-split {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: 28px;
+      }
+
+      .create-grid,
+      .examples-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .not-enough-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .create-card,
+      .example-card,
+      .ne-card {
+        padding: 24px;
+      }
+
+      .needs-no, .needs-yes {
+        padding: 24px;
+      }
+
+      .hero-stats {
+        gap: 24px;
+        margin-top: 48px;
+      }
+
+      .stat-number {
+        font-size: 32px;
+      }
+
+      .hero-desc {
+        margin-bottom: 32px;
+      }
+
+      .cta-features {
+        gap: 12px;
+        flex-direction: column;
+        align-items: center;
+        margin: 28px 0 36px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-gold {
+        font-size: 17px;
+        padding: 18px 36px;
+      }
+
+      .final-cta { padding: 56px 0; }
+
+      .prompt-box {
+        margin-top: 28px;
+      }
+
+      .try-it-note {
+        margin-top: 20px;
+        font-size: 16px;
+      }
+
+      .big-quote {
+        font-size: 20px;
+      }
+
+      .timeline-item {
+        padding-bottom: 24px;
+      }
+
+      .toc-grid {
+        gap: 8px;
+      }
+
+      .toc-item {
+        padding: 16px 18px;
+        gap: 14px;
+      }
+
+      .code-arrow {
+        margin: 16px 0;
+      }
+
+      .marquee-section {
+        padding: 14px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <span class="logo">VIBE<span style="opacity: 0.6;">CODE</span></span>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="container">
+      <div class="fade-up">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Гайд по вайб-кодингу
+        </div>
+      </div>
+      <h1 class="hero-title fade-up delay-1">
+        Вайб-кодинг<br><span class="highlight">без кода</span>
+      </h1>
+      <p class="hero-desc fade-up delay-2">
+        Создавайте сайты, ботов и приложения с помощью нейросетей &mdash; без программирования. Объясняете словами, а ИИ собирает за вас.
+      </p>
+      <div class="hero-buttons fade-up delay-3">
+        <a href="#toc" class="btn btn-primary">Смотреть содержание &darr;</a>
+      </div>
+      <div class="hero-stats fade-up delay-4">
+        <div class="stat">
+          <div class="stat-number">0</div>
+          <div class="stat-label">строк кода</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">2</div>
+          <div class="stat-label">дня практики</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">&infin;</div>
+          <div class="stat-label">возможностей</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MARQUEE ========== -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">Лендинги <span class="sep">/</span></span>
+      <span class="marquee-item">Telegram-боты <span class="sep">/</span></span>
+      <span class="marquee-item">Приложения <span class="sep">/</span></span>
+      <span class="marquee-item">Автоматизация <span class="sep">/</span></span>
+      <span class="marquee-item">Сервисы <span class="sep">/</span></span>
+      <span class="marquee-item">Планировщики <span class="sep">/</span></span>
+      <span class="marquee-item">Трекеры <span class="sep">/</span></span>
+      <span class="marquee-item">Аналитика <span class="sep">/</span></span>
+      <span class="marquee-item">Лендинги <span class="sep">/</span></span>
+      <span class="marquee-item">Telegram-боты <span class="sep">/</span></span>
+      <span class="marquee-item">Приложения <span class="sep">/</span></span>
+      <span class="marquee-item">Автоматизация <span class="sep">/</span></span>
+      <span class="marquee-item">Сервисы <span class="sep">/</span></span>
+      <span class="marquee-item">Планировщики <span class="sep">/</span></span>
+      <span class="marquee-item">Трекеры <span class="sep">/</span></span>
+      <span class="marquee-item">Аналитика <span class="sep">/</span></span>
+    </div>
+  </div>
+
+  <!-- ========== TABLE OF CONTENTS ========== -->
+  <section class="section" id="toc" style="background: linear-gradient(180deg, var(--bg-dark) 0%, #130E28 50%, var(--bg-dark) 100%); padding-top: 80px; padding-bottom: 80px;">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Содержание</span>
+        <h2 class="section-title">Что внутри этого гайда</h2>
+        <p class="section-subtitle" style="margin:0 auto 48px;">Полная карта того, что вы узнаете. Кликайте на любой пункт.</p>
+      </div>
+      <div class="toc-grid">
+        <a href="#what-is" class="toc-item fade-up delay-1">
+          <div class="toc-num">01</div>
+          <div class="toc-text">
+            <h3>Что такое вайб-кодинг</h3>
+            <p>Простое объяснение без сложных терминов</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#create" class="toc-item fade-up delay-1">
+          <div class="toc-num">02</div>
+          <div class="toc-text">
+            <h3>Что можно создавать</h3>
+            <p>Сайты, боты, приложения, автоматизация</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#why-now" class="toc-item fade-up delay-2">
+          <div class="toc-num">03</div>
+          <div class="toc-text">
+            <h3>Почему это работает сейчас</h3>
+            <p>Что изменилось и почему это важно</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#examples" class="toc-item fade-up delay-2">
+          <div class="toc-num">04</div>
+          <div class="toc-text">
+            <h3>Где здесь деньги</h3>
+            <p>Конкретные примеры заработка</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#needs" class="toc-item fade-up delay-3">
+          <div class="toc-num">05</div>
+          <div class="toc-text">
+            <h3>Что нужно для старта</h3>
+            <p>Без мифов &mdash; честный список</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#try-it" class="toc-item fade-up delay-3">
+          <div class="toc-num">06</div>
+          <div class="toc-text">
+            <h3>Попробуйте прямо сейчас</h3>
+            <p>Ваш первый промпт для практики</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+        <a href="#not-enough" class="toc-item fade-up delay-4">
+          <div class="toc-num">07</div>
+          <div class="toc-text">
+            <h3>Почему одного гайда мало</h3>
+            <p>Что отличает навык от пробы</p>
+          </div>
+          <div class="toc-arrow">&rarr;</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHAT IS ========== -->
+  <section class="section what-is" id="what-is">
+    <div class="container">
+      <div class="fade-up">
+        <span class="section-label">Что это такое</span>
+        <h2 class="section-title">Вайб-кодинг &mdash; вы говорите,<br>нейросеть создаёт</h2>
+        <p class="section-subtitle">Вы не пишете код вручную. Вы объясняете словами, что должно получиться &mdash; нейросеть собирает техническую часть.</p>
+      </div>
+      <div class="what-is-grid">
+        <div class="what-is-visual fade-up delay-1">
+          <div class="code-window">
+            <div class="code-header">
+              <span class="code-dot red"></span>
+              <span class="code-dot yellow"></span>
+              <span class="code-dot green"></span>
+            </div>
+            <div class="code-body">
+              <div><span class="code-comment">// Ваш запрос нейросети:</span></div>
+              <br>
+              <div><span class="code-keyword">Сделай</span> <span class="code-string">сайт-визитку</span></div>
+              <div><span class="code-keyword">для</span> <span class="code-func">фотографа</span></div>
+              <div><span class="code-keyword">с</span> <span class="code-string">галереей работ</span>,</div>
+              <div><span class="code-string">формой записи</span></div>
+              <div><span class="code-keyword">и</span> <span class="code-func">отзывами клиентов</span></div>
+            </div>
+          </div>
+          <div class="code-arrow">&darr;</div>
+          <div class="result-window">
+            <div class="emoji">&#127912;</div>
+            <strong>Готовый сайт за минуты</strong>
+            <p>С дизайном, адаптивом и рабочими формами</p>
+            <div class="site-preview">
+              <div class="sp-bar">
+                <div class="sp-bar-dot r"></div>
+                <div class="sp-bar-dot y"></div>
+                <div class="sp-bar-dot g"></div>
+                <div class="sp-bar-url">mysite.com</div>
+              </div>
+              <div class="sp-page">
+                <!-- Hero -->
+                <div class="sp-block-hero">
+                  <div class="sp-line-lg"></div>
+                  <div class="sp-line-accent"></div>
+                  <div class="sp-line-sm"></div>
+                  <div class="sp-line-sm" style="width:50%;"></div>
+                  <div class="sp-btn-fake"></div>
+                </div>
+                <!-- Features -->
+                <div class="sp-block-features">
+                  <div class="sp-feature-card">
+                    <div class="sp-feature-icon"></div>
+                    <div class="sp-feature-line"></div>
+                    <div class="sp-feature-line2"></div>
+                  </div>
+                  <div class="sp-feature-card">
+                    <div class="sp-feature-icon" style="background:rgba(236,72,153,0.2);"></div>
+                    <div class="sp-feature-line"></div>
+                    <div class="sp-feature-line2"></div>
+                  </div>
+                  <div class="sp-feature-card">
+                    <div class="sp-feature-icon" style="background:rgba(245,158,11,0.2);"></div>
+                    <div class="sp-feature-line"></div>
+                    <div class="sp-feature-line2"></div>
+                  </div>
+                </div>
+                <!-- Reviews -->
+                <div class="sp-block-reviews">
+                  <div class="sp-review-card">
+                    <div class="sp-review-avatar"></div>
+                    <div class="sp-review-stars-w">
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                    </div>
+                    <div class="sp-review-line"></div>
+                  </div>
+                  <div class="sp-review-card">
+                    <div class="sp-review-avatar" style="background:rgba(236,72,153,0.2);"></div>
+                    <div class="sp-review-stars-w">
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                    </div>
+                    <div class="sp-review-line"></div>
+                  </div>
+                  <div class="sp-review-card">
+                    <div class="sp-review-avatar" style="background:rgba(245,158,11,0.2);"></div>
+                    <div class="sp-review-stars-w">
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                      <div class="sp-review-star"></div>
+                    </div>
+                    <div class="sp-review-line"></div>
+                  </div>
+                </div>
+                <!-- CTA -->
+                <div class="sp-block-cta">
+                  <div class="sp-line-md"></div>
+                  <div class="sp-btn-fake-gold"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-up delay-2">
+          <div style="display:flex; flex-direction:column; gap:28px;">
+            <div style="display:flex; gap:16px; align-items:flex-start;">
+              <div style="min-width:44px; height:44px; border-radius:12px; background:rgba(124,58,237,0.15); display:flex; align-items:center; justify-content:center; font-size:20px;">&#128172;</div>
+              <div>
+                <h4 style="font-size:17px; font-weight:700; margin-bottom:6px;">Говорите обычным языком</h4>
+                <p style="color:var(--text-muted); font-size:15px;">Никакого синтаксиса, функций и переменных. Вы просто описываете, что нужно сделать.</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:16px; align-items:flex-start;">
+              <div style="min-width:44px; height:44px; border-radius:12px; background:rgba(236,72,153,0.15); display:flex; align-items:center; justify-content:center; font-size:20px;">&#9889;</div>
+              <div>
+                <h4 style="font-size:17px; font-weight:700; margin-bottom:6px;">Нейросеть делает остальное</h4>
+                <p style="color:var(--text-muted); font-size:15px;">Структура, дизайн, логика &mdash; всё собирается автоматически по вашему описанию.</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:16px; align-items:flex-start;">
+              <div style="min-width:44px; height:44px; border-radius:12px; background:rgba(245,158,11,0.15); display:flex; align-items:center; justify-content:center; font-size:20px;">&#127919;</div>
+              <div>
+                <h4 style="font-size:17px; font-weight:700; margin-bottom:6px;">Вы управляете результатом</h4>
+                <p style="color:var(--text-muted); font-size:15px;">Думаете как создатель продукта, а не как программист. Важна идея, а не код.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHAT CAN CREATE ========== -->
+  <section class="section create" id="create">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Возможности</span>
+        <h2 class="section-title">Что можно создавать<br>с помощью вайб-кодинга</h2>
+        <p class="section-subtitle" style="margin:0 auto;">Реальные форматы, которые уже используют в жизни и бизнесе.</p>
+      </div>
+      <div class="create-grid">
+        <div class="create-card fade-up delay-1">
+          <div class="create-icon purple">&#127760;</div>
+          <h3>Сайты</h3>
+          <ul>
+            <li>Лендинги под услуги и продукты</li>
+            <li>Сайты под курсы и экспертов</li>
+            <li>Страницы мероприятий</li>
+          </ul>
+        </div>
+        <div class="create-card fade-up delay-2">
+          <div class="create-icon pink">&#129302;</div>
+          <h3>Telegram-боты</h3>
+          <ul>
+            <li>Запись клиентов</li>
+            <li>Заявки и консультации</li>
+            <li>Автоматические ответы</li>
+          </ul>
+        </div>
+        <div class="create-card fade-up delay-3">
+          <div class="create-icon amber">&#128736;</div>
+          <h3>Приложения и сервисы</h3>
+          <ul>
+            <li>Планировщики и трекеры</li>
+            <li>Панели управления</li>
+            <li>Внутренние инструменты</li>
+          </ul>
+        </div>
+        <div class="create-card fade-up delay-4">
+          <div class="create-icon green">&#9889;</div>
+          <h3>Автоматизация</h3>
+          <ul>
+            <li>Учёт и аналитика</li>
+            <li>Сбор и обработка данных</li>
+            <li>Генерация отчётов</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHY NOW ========== -->
+  <section class="section why-now" id="why-now">
+    <div class="container">
+      <div class="fade-up">
+        <span class="section-label">Почему именно сейчас</span>
+        <h2 class="section-title">Нейросети изменили правила игры</h2>
+      </div>
+      <div class="why-now-content">
+        <div class="timeline fade-up delay-1">
+          <div class="timeline-item">
+            <div class="timeline-dot">&#128483;</div>
+            <div class="timeline-text">
+              <h4>Понимают обычный язык</h4>
+              <p>ИИ научился понимать человеческую речь и превращать её в работающие решения.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">&#129504;</div>
+            <div class="timeline-text">
+              <h4>Выстраивают логику</h4>
+              <p>Нейросети не просто генерируют текст &mdash; они выстраивают процессы и связи.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">&#127959;</div>
+            <div class="timeline-text">
+              <h4>Собирают сложные структуры</h4>
+              <p>Целые сайты и приложения создаются по описанию в несколько предложений.</p>
+            </div>
+          </div>
+        </div>
+        <div class="fade-up delay-2">
+          <div class="big-quote">
+            Сегодня ценится не знание кода, а умение <span class="accent">чётко формулировать задачу</span> и мыслить процессами.<br><br>
+            Один человек может собрать то, для чего раньше нужна была целая команда.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== EXAMPLES ========== -->
+  <section class="section examples" id="examples">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Где здесь деньги</span>
+        <h2 class="section-title">Конкретные примеры из жизни</h2>
+        <p class="section-subtitle" style="margin:0 auto;">Без &laquo;можно&raquo;, &laquo;потенциально&raquo; и &laquo;когда-нибудь&raquo;.</p>
+      </div>
+      <div class="examples-grid">
+        <div class="example-card fade-up delay-1">
+          <div class="example-header">
+            <div class="example-num">1</div>
+            <h3>Telegram-бот для записи</h3>
+          </div>
+          <div class="example-meta">
+            <div class="example-meta-item">
+              <span class="label">Для кого:</span>
+              <span>Мастера, салоны, сервисы</span>
+            </div>
+            <div class="example-meta-item">
+              <span class="label">Что создаётся:</span>
+              <span>Бот для приёма заявок и записи клиентов</span>
+            </div>
+          </div>
+          <div class="example-money">
+            <div class="example-money-title">Заработок</div>
+            <ul>
+              <li>Бот для себя</li>
+              <li>Боты на заказ</li>
+              <li>Услуга для клиентов</li>
+            </ul>
+          </div>
+        </div>
+        <div class="example-card fade-up delay-2">
+          <div class="example-header">
+            <div class="example-num">2</div>
+            <h3>Сайт или лендинг</h3>
+          </div>
+          <div class="example-meta">
+            <div class="example-meta-item">
+              <span class="label">Для кого:</span>
+              <span>Эксперты, предприниматели</span>
+            </div>
+            <div class="example-meta-item">
+              <span class="label">Что создаётся:</span>
+              <span>Сайт с описанием услуги и формой заявки</span>
+            </div>
+          </div>
+          <div class="example-money">
+            <div class="example-money-title">Заработок</div>
+            <ul>
+              <li>Сайт для себя</li>
+              <li>Сайты для клиентов</li>
+              <li>Быстрые проекты</li>
+            </ul>
+          </div>
+        </div>
+        <div class="example-card fade-up delay-3">
+          <div class="example-header">
+            <div class="example-num">3</div>
+            <h3>Внутренний сервис</h3>
+          </div>
+          <div class="example-meta">
+            <div class="example-meta-item">
+              <span class="label">Для кого:</span>
+              <span>Бизнес, команды</span>
+            </div>
+            <div class="example-meta-item">
+              <span class="label">Что создаётся:</span>
+              <span>Учёт, аналитика, панели управления</span>
+            </div>
+          </div>
+          <div class="example-money">
+            <div class="example-money-title">Заработок</div>
+            <ul>
+              <li>Экономия внутри бизнеса</li>
+              <li>Платные проекты под задачи</li>
+            </ul>
+          </div>
+        </div>
+        <div class="example-card fade-up delay-4">
+          <div class="example-header">
+            <div class="example-num">4</div>
+            <h3>Свой продукт</h3>
+          </div>
+          <div class="example-meta">
+            <div class="example-meta-item">
+              <span class="label">Для кого:</span>
+              <span>Пользователи, подписчики</span>
+            </div>
+            <div class="example-meta-item">
+              <span class="label">Что создаётся:</span>
+              <span>Планировщик, трекер, онлайн-сервис</span>
+            </div>
+          </div>
+          <div class="example-money">
+            <div class="example-money-title">Заработок</div>
+            <ul>
+              <li>Подписка</li>
+              <li>Разовая оплата</li>
+              <li>Дополнение к услуге</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHAT YOU NEED ========== -->
+  <section class="section needs" id="needs">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Что нужно для старта</span>
+        <h2 class="section-title">Без мифов и лишних требований</h2>
+      </div>
+      <div class="needs-content">
+        <div class="needs-split">
+          <div class="needs-no fade-up delay-1">
+            <h3>&#10060; Не нужно</h3>
+            <ul class="needs-list">
+              <li><span class="icon">&#128218;</span><span class="text">Диплом программиста</span></li>
+              <li><span class="icon">&#128187;</span><span class="text">Знание языков программирования</span></li>
+              <li><span class="icon">&#129520;</span><span class="text">Техническое образование</span></li>
+              <li><span class="icon">&#128176;</span><span class="text">Большой бюджет на разработку</span></li>
+            </ul>
+          </div>
+          <div class="needs-yes fade-up delay-2">
+            <h3>&#9989; Нужно</h3>
+            <ul class="needs-list">
+              <li><span class="icon">&#128173;</span><span class="text">Уметь формулировать задачу</span></li>
+              <li><span class="icon">&#128161;</span><span class="text">Понимать простую логику &laquo;что &rarr; зачем &rarr; как&raquo;</span></li>
+              <li><span class="icon">&#128064;</span><span class="text">Видеть примеры и разбирать их</span></li>
+              <li><span class="icon">&#128170;</span><span class="text">Практика &mdash; только так</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TRY IT ========== -->
+  <section class="section try-it" id="try-it">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Попробуйте прямо сейчас</span>
+        <h2 class="section-title">Ваш первый шаг в вайб-кодинг</h2>
+        <p class="section-subtitle" style="margin:0 auto;">Скопируйте этот промпт в ChatGPT или Claude и посмотрите, что получится.</p>
+      </div>
+      <div class="prompt-box fade-up delay-1">
+        <div class="prompt-header">
+          <span>&#128203; Промпт для нейросети</span>
+          <button class="copy-btn" onclick="copyPrompt()">Скопировать</button>
+        </div>
+        <div class="prompt-body" id="prompt-text">
+          <strong>Ты &mdash; опытный веб-разработчик и дизайнер.</strong><br><br>
+          Создай <strong>полноценный одностраничный лендинг</strong> в <strong>одном HTML-файле</strong> для:<br>
+          <span class="prompt-highlight">[опиши свой продукт или услугу]</span><br><br>
+          <strong>Требования:</strong><br>
+          &bull; Современный и минималистичный дизайн<br>
+          &bull; Адаптивная вёрстка<br>
+          &bull; Hero-блок с заголовком, подзаголовком и CTA<br>
+          &bull; Три преимущества / особенности<br>
+          &bull; Отзывы (3 шт.)<br>
+          &bull; Блок с тарифами<br>
+          &bull; Финальный призыв к действию<br>
+          &bull; Плавные анимации при прокрутке<br><br>
+          Выведи полный HTML-код, готовый к открытию в браузере.
+        </div>
+      </div>
+      <p class="try-it-note fade-up delay-2">
+        Получили результат? Поздравляем &mdash; вы только что попробовали <span class="accent">вайб-кодинг</span>!
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== NOT ENOUGH ========== -->
+  <section class="section not-enough" id="not-enough">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="section-label">Одного гайда мало</span>
+        <h2 class="section-title">Чтобы реально начать,<br>нужна система</h2>
+      </div>
+      <div class="not-enough-grid">
+        <div class="ne-card fade-up delay-1">
+          <div class="ne-icon">&#128300;</div>
+          <h3>Один промпт &mdash; это проба</h3>
+          <p>Попробовать интересно, но разовый результат не даёт навыка.</p>
+        </div>
+        <div class="ne-card fade-up delay-2">
+          <div class="ne-icon">&#127922;</div>
+          <h3>Один пример &mdash; случайность</h3>
+          <p>Нужно понимать логику, видеть процесс целиком и разбирать ошибки.</p>
+        </div>
+        <div class="ne-card fade-up delay-3">
+          <div class="ne-icon">&#127942;</div>
+          <h3>Навык &mdash; это система</h3>
+          <p>Только практика с обратной связью превращает интерес в реальный навык.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CLOSING ========== -->
+  <section class="section final-cta">
+    <div class="shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+    </div>
+    <div class="container">
+      <div class="fade-up">
+        <div class="cta-badge">&#127873; Подарок за регистрацию</div>
+      </div>
+      <h2 class="section-title fade-up delay-1">
+        Теперь вы знаете,<br>что такое вайб-кодинг
+      </h2>
+      <p class="section-subtitle fade-up delay-2" style="margin:0 auto; text-align:center;">
+        Вы прочитали полный гайд. У вас есть понимание направления, примеры из жизни и даже первый промпт для практики. <strong style="color:#fff;">Используйте это.</strong>
+      </p>
+      <div class="cta-features fade-up delay-3">
+        <div class="cta-feature">
+          <div class="check">&#10003;</div>
+          <span>Разобрались в теме</span>
+        </div>
+        <div class="cta-feature">
+          <div class="check">&#10003;</div>
+          <span>Увидели примеры</span>
+        </div>
+        <div class="cta-feature">
+          <div class="check">&#10003;</div>
+          <span>Получили первый промпт</span>
+        </div>
+        <div class="cta-feature">
+          <div class="check">&#10003;</div>
+          <span>Готовы пробовать</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Вайб-кодинг без кода. Все права защищены.</p>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Copy prompt
+    function copyPrompt() {
+      const text = document.getElementById('prompt-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Скопировано!';
+        btn.style.background = '#22C55E';
+        btn.style.borderColor = '#22C55E';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.textContent = 'Скопировать';
+          btn.style.background = '';
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
