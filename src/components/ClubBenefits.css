@@ -1,0 +1,302 @@
+.club-benefits {
+  padding: 0 0 clamp(36px, 4.8vw, 63px);
+  background: var(--white);
+  overflow-x: clip;
+}
+
+.club-benefits .container.club-benefits__inner {
+  width: 70%;
+  max-width: calc(var(--container-max) * 0.7);
+  margin-inline: auto;
+}
+
+.club-benefits__wrapper {
+  padding: clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px) clamp(28px, 4vw, 40px);
+  border-radius: clamp(28px, 4vw, 40px);
+  background: var(--lavender);
+  overflow: visible;
+}
+
+.club-benefits__title {
+  margin: 0 0 clamp(24px, 3.5vw, 36px);
+  font-family: var(--font-display);
+  font-size: var(--heading-size);
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--purple-rich);
+}
+
+.club-benefits__list {
+  display: grid;
+  gap: 20px;
+  overflow: visible;
+}
+
+.club-benefits__meetings {
+  width: 100%;
+}
+
+.benefit-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2.5vw, 24px);
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: var(--radius-lg);
+  overflow: visible;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.benefit-card:hover {
+  transform: translateY(-2px);
+}
+
+.benefit-card--purple {
+  background: var(--purple-rich);
+  color: var(--white);
+}
+
+.benefit-card--white {
+  background: var(--white);
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(111, 79, 179, 0.08);
+}
+
+.benefit-card__content {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.benefit-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--heading-size);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.benefit-card__text {
+  margin: 0;
+  max-width: 52ch;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.45;
+}
+
+.benefit-card__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.benefit-card__media img {
+  width: min(100%, 320px);
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 32px rgba(58, 36, 110, 0.18));
+}
+
+.club-benefits__summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  min-height: clamp(320px, 42vw, 399px);
+  padding: clamp(28px, 4vw, 40px);
+  border-radius: 40px;
+  background: #6c56a9;
+  color: var(--white);
+  overflow: hidden;
+}
+
+.club-benefits__summary-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: clamp(14px, 2vw, 18px);
+  justify-items: start;
+  align-content: center;
+}
+
+.club-benefits__summary-title {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  max-width: min(100%, 407px);
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.2vw, 30px);
+  font-weight: 700;
+  line-height: 1.08;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.club-benefits__summary-title-line {
+  display: block;
+}
+
+.club-benefits__summary-lead {
+  margin: 0;
+  max-width: min(100%, 385px);
+  font-family: 'Raleway', var(--font-body);
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 400;
+  line-height: 1.35;
+  text-transform: lowercase;
+  color: var(--white);
+}
+
+.club-benefits__summary-btn {
+  min-height: 69px;
+  min-width: min(100%, 293px);
+  margin-top: clamp(4px, 1vw, 8px);
+  border-radius: 20px;
+  font-size: clamp(16px, 1.8vw, 18px);
+}
+
+.club-benefits__summary-media {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: clamp(280px, 40vw, 360px);
+  overflow: visible;
+}
+
+.club-benefits__summary-deco {
+  position: absolute;
+  right: 50%;
+  bottom: 0;
+  width: min(140%, 500px);
+  max-width: none;
+  transform: translateX(48%);
+  object-fit: contain;
+  object-position: bottom center;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.club-benefits__summary-photo {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 460px);
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+@media (min-width: 768px) {
+  .benefit-card {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  .benefit-card__media {
+    align-self: stretch;
+    justify-content: flex-end;
+  }
+
+  .benefit-card--reverse .benefit-card__content {
+    order: 2;
+  }
+
+  .benefit-card--reverse .benefit-card__media {
+    order: 1;
+    justify-content: flex-start;
+  }
+
+  .benefit-card:not(.benefit-card--reverse) .benefit-card__media img {
+    margin-right: -16px;
+  }
+
+  .benefit-card--reverse .benefit-card__media img {
+    margin-left: -16px;
+  }
+
+  .benefit-card__media img {
+    width: min(100%, 360px);
+    max-height: 340px;
+  }
+
+  .club-benefits__summary {
+    display: block;
+    min-height: 399px;
+    padding: 0;
+  }
+
+  .club-benefits__summary-content {
+    position: relative;
+    z-index: 2;
+    max-width: min(100%, 420px);
+    padding: clamp(48px, 6vw, 83px) clamp(24px, 3vw, 48px) clamp(36px, 4vw, 48px)
+      clamp(24px, 3.5vw, 67px);
+  }
+
+  .club-benefits__summary-media {
+    position: absolute;
+    inset: 0 0 0 42%;
+    display: block;
+    min-height: 0;
+  }
+
+  .club-benefits__summary-deco {
+    right: clamp(-8px, -1vw, 0);
+    bottom: 0;
+    left: auto;
+    width: min(115%, 420px);
+    transform: none;
+  }
+
+  .club-benefits__summary-photo {
+    position: absolute;
+    right: clamp(8px, 2vw, 24px);
+    bottom: 0;
+    width: min(100%, 460px);
+    max-height: calc(100% + 32px);
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 959px) {
+  .club-benefits .container.club-benefits__inner {
+    width: 100%;
+    max-width: min(100% - 32px, var(--container-max));
+  }
+}
+
+@media (max-width: 767px) {
+  .benefit-card__media img {
+    width: min(100%, 280px);
+    max-height: 260px;
+    margin-inline: auto;
+  }
+
+  .club-benefits__summary {
+    padding-bottom: 0;
+  }
+
+  .club-benefits__summary-content {
+    padding-bottom: clamp(20px, 4vw, 28px);
+  }
+
+  .club-benefits__summary-media {
+    min-height: clamp(260px, 62vw, 320px);
+    margin-top: -8px;
+  }
+
+  .club-benefits__summary-photo {
+    width: min(100%, 320px);
+  }
+}
+
+@media (max-width: 430px) {
+  .club-benefits__wrapper {
+    padding: 24px 16px;
+    border-radius: var(--radius-md);
+  }
+}

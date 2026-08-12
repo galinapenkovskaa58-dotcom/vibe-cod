@@ -1,0 +1,86 @@
+.meetings {
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: 0 8px 32px rgba(111, 79, 179, 0.1);
+}
+
+.meetings__header {
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+
+.meetings__title {
+  font-family: var(--font-display);
+  font-size: var(--heading-size);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--purple-rich);
+}
+
+.meetings__columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.meetings__month-label {
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: var(--heading-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.meetings__list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meetings__item {
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--lavender-light);
+  border-left: 4px solid var(--purple);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.meetings__item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(111, 79, 179, 0.1);
+}
+
+.meetings__item-title {
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.meetings__item-topic {
+  margin-top: 6px;
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--purple-rich);
+}
+
+@media (min-width: 768px) {
+  .meetings__columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 430px) {
+  .meetings {
+    padding: 20px 16px;
+  }
+
+  .meetings__item {
+    padding: 14px 16px;
+  }
+}

@@ -1,0 +1,108 @@
+.video-section {
+  padding: clamp(60px, 8vw, 105px) 0;
+  background: var(--white);
+}
+
+.video-section .container.video-section__inner {
+  width: 70%;
+  max-width: calc(var(--container-max) * 0.7);
+  margin-inline: auto;
+}
+
+.video-section__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.2vw, 28px);
+}
+
+.video-section__media {
+  flex: 0 0 auto;
+  width: min(100%, 375px);
+}
+
+.video-section__content {
+  flex: 0 1 380px;
+  display: grid;
+  gap: clamp(12px, 2vw, 20px);
+  justify-items: start;
+  max-width: 380px;
+}
+
+.video-section__poster,
+.video-section__player {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video-section__poster img,
+.video-section__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: clamp(12px, 2vw, 18px);
+}
+
+.video-section__video {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #111;
+}
+
+.video-section__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--heading-size);
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.video-section__subtitle {
+  margin: 0;
+  max-width: 34ch;
+  font-family: 'Raleway', var(--font-body);
+  font-size: clamp(12px, 1.5vw, 15px);
+  line-height: 1.35;
+  color: #2e2e2e;
+}
+
+@media (max-width: 959px) {
+  .video-section .container.video-section__inner {
+    width: 100%;
+    max-width: min(100% - 32px, var(--container-max));
+  }
+
+  .video-section__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .video-section__media {
+    width: min(100%, 460px);
+  }
+
+  .video-section__content {
+    flex: 1 1 auto;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .video-section__subtitle {
+    max-width: 42ch;
+  }
+}
+
+@media (max-width: 479px) {
+  .video-section__media {
+    width: min(100%, 394px);
+  }
+}

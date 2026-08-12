@@ -1,0 +1,38 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 16px 36px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--yellow-gradient);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--transition), filter var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 16px rgba(255, 213, 47, 0.35);
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.05);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.btn--wide {
+  min-width: min(100%, 293px);
+}
+
+.btn--compact {
+  min-height: 48px;
+  padding: 12px 28px;
+  font-size: 15px;
+}
